@@ -7,9 +7,10 @@ from flask import session
 from flask import redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func
+import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:password@localhost:3306/scheduling_app'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('CLEARDB_DATABASE_URL')
 app.config['SECRET_KEY'] = '3b96c64401d7'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 db = SQLAlchemy(app)
