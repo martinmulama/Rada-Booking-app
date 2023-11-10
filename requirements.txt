@@ -17,5 +17,5 @@ protobuf==4.21.12
 psycopg2==2.9.9
 psycopg2-binary==2.9.9
 SQLAlchemy==2.0.22
-typing_extensions==4.8.0
-Werkzeug==3.0.1
+typing_extensions
+Werkzeug
