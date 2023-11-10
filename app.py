@@ -11,12 +11,11 @@ import os
 from flask_migrate import Migrate
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:password@localhost:3306/scheduling_app'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://martin:cihNMEY3Ad5nuC45HS01m2JyJQzkAT8M@dpg-cl79pr2uuipc73efa5c0-a.oregon-postgres.render.com/scheduling_app_op6b'
+# postgresql://martin:cihNMEY3Ad5nuC45HS01m2JyJQzkAT8M@dpg-cl79pr2uuipc73efa5c0-a.oregon-postgres.render.com/scheduling_app_op6b
 app.config['SECRET_KEY'] = '3b96c64401d7'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 db = SQLAlchemy(app)
-
-migrate = Migrate(app, db)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -43,15 +42,6 @@ class Service(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey(
         'category.id'), nullable=False)
 
-
-def get_service_id(service_name):
-    with db.engine.connect() as connection:
-        query = text("SELECT id FROM service WHERE name = :service_name")
-        result = connection.execute(query, {'service_name': service_name})
-        service_id = result.scalar()
-    return service_id
-
-
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -74,9 +64,18 @@ class Booking(db.Model):
         self.start_time = start_time
         self.end_time = end_time
 
+
+def get_service_id(service_name):
+    with db.engine.connect() as connection:
+        query = text("SELECT id FROM service WHERE name = :service_name")
+        result = connection.execute(query, {'service_name': service_name})
+        service_id = result.scalar()
+    return service_id
+
+
 @app.route('/')
 def home():
-    services = Service.query.order_by(func.rand()).limit(4).all()# Replace with your actual query
+    services = Service.query.order_by(func.random()).limit(4).all()# Replace with your actual query
     return render_template('landing.html', services=services)
 
 @app.route('/signup', methods=['GET'])
@@ -263,6 +262,7 @@ def cancel_booking(booking_id):
 @app.route('/about')
 def about():
     return render_template('about.html')
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
