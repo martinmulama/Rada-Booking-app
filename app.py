@@ -58,7 +58,7 @@ class Booking(db.Model):
     service_id = db.Column(db.Integer, db.ForeignKey(
         'service.id'), nullable=False)
     booking_date = db.Column(db.Date, nullable=False)
-    # Store time as a string (e.g., "09:00 AM")
+    # Store time as a string (e.g. "09:00 AM")
     start_time = db.Column(db.String(250), nullable=False)
     # Store time as a string (e.g., "10:00 AM")
     end_time =  db.Column(db.String(250), nullable=False)
